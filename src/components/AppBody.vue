@@ -37,7 +37,7 @@ export default {
   },
   mounted() {
     // QUA BONUS LISTA GENERATA TRAMITE API 50 CARTE
-    axios.get('https://db.ygoprodeck.com/api/v7/cardinfo.php?num=80&offset=0').then((result) => {
+    axios.get('https://db.ygoprodeck.com/api/v7/cardinfo.php?num=2000&offset=0').then((result) => {
       // this.listaApi = result.data.data,
       this.ListaContenuti.carteApi = result.data.data
       // 
@@ -50,12 +50,17 @@ export default {
           element.archetype = 'undefined'
         }else { //IL RESTO LI PUSHO DENTRO AL ARRAY CHE CICLA SUL SELECT
           this.ListaContenuti.archetype.push(element.archetype)
-          console.log(element.archetype);
+          // console.log(element.archetype);
         }
         // TENGO TRACCIA DEL NUMERO DI CARTE DEL TIPO SELEZIONATO (INIZIALMENTE TUTTE)
         this.ListaContenuti.cardType = this.ListaContenuti.carteApi.length
       }
 })
+// INSERISCO GLI ARCHETIPI TRAMITE API
+    axios.get('https://db.ygoprodeck.com/api/v7/archetypes.php').then((r) => {
+      this.ListaContenuti.archetypeApi = r.data
+      console.log(r.data[0].archetype_name);
+    })
   },
 }
 </script>
@@ -66,7 +71,7 @@ export default {
       <div class="p-3">
         <!-- SELECT PER TIPO DI CARTA -->
         <select name="role" id="role" v-model="select" @change="cardNumber">
-          <option v-for="elemento in ListaContenuti.archetype" :value="elemento">{{ elemento }}</option>
+          <option v-for="elemento in ListaContenuti.archetypeApi" :value="elemento.archetype_name">{{ elemento.archetype_name }}</option>
         </select>
       </div>
     </div>

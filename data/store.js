@@ -4,6 +4,7 @@ import { reactive } from "vue";
 let ListaContenuti = {
     // VARIABILE PER NUMERARE CARTE PER TIPOLOGIA DI ARCHETIPO
     cardType: 0,
+    archetypeApi: [],
     archetype: ['All',],
     carteApi: [],
     carte: [
