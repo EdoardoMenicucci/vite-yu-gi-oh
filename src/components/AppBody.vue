@@ -2,7 +2,8 @@
 <script>
 import AppCard from './AppCard.vue';
 // QUA ESERCIZIO SVOLTO TRAMITE UNA VARIABILE ESPORTATA DA UN FILE JS CLASSICO
-import listaCarte from '../../data/store';
+// import listaCarte from '../../data/store';
+import ListaContenuti from '../../data/store';
 // SCRIPT
 export default {
   // name: AppBody,
@@ -12,20 +13,36 @@ export default {
   },
   data() {
     return {
-      listaCarte,
-      listaApi:[]
+      ListaContenuti,
+      select :'All'
     }
   },
   methods: {
 
   },
+  computed: {
+        
+  },
   mounted() {
     // QUA BONUS LISTA GENERATA TRAMITE API 50 CARTE
     axios.get('https://db.ygoprodeck.com/api/v7/cardinfo.php?num=50&offset=0').then((result) => {
-      setTimeout( ()=> this.listaApi = result.data.data,
-      console.log(result.data.data), 5000)
-      
+      // this.listaApi = result.data.data,
+      this.ListaContenuti.carteApi = result.data.data
+      for (let i = 0; i < this.ListaContenuti.carteApi.length; i++) {
+        const element = this.ListaContenuti.carteApi[i];
+        // console.log(element.archetype);
+        if (this.ListaContenuti.archetype.includes(element.archetype) || this.ListaContenuti.archetype.includes(null)){
+          // console.log(element.archetype,'gia contenuto');
+        } else if(element.archetype == NaN){
+          element.archetype = 'undefined'
+        }else {
+          this.ListaContenuti.archetype.push(element.archetype)
+          console.log(element.archetype);
+        }
+        
+      }
 })
+    // this.selectArche()
   },
 }
 </script>
@@ -35,8 +52,8 @@ export default {
     <div class="container">
       <div class="p-3">
         <!-- SELECT PER TIPO DI CARTA -->
-        <select name="role" id="role">
-          <option value="Melodious">All</option>
+        <select name="role" id="role" v-model="select">
+          <option v-for="elemento in ListaContenuti.archetype" :value="elemento">{{ elemento }}</option>
         </select>
       </div>
     </div>
@@ -44,12 +61,13 @@ export default {
     <!-- Sezione principale -->
       <div class="main-section p-5">
         <div class="found p-3">
-          <div>Sono state trovate: {{ listaApi.length}} carte</div>
+          <div>Sono state trovate: {{ ListaContenuti.carteApi.length}} carte</div>
         </div>
         <!-- QUA ANDRANNO TUTTE LE CARTE -->
         <!-- CONTENITORE CARD -->
         <div class="d-flex flex-wrap justify-content-between">
-              <AppCard v-for="card in listaApi" :nome="card.name" :imgUrl="card.card_images[0].image_url" :type="card.archetype"/>
+          <!-- LISTA API LISTA TRAMITE AXIOS CON 50 CARTE LISTACARTE LISTA SU FOGLIO JS -->
+            <AppCard v-for="card in ListaContenuti.carteApi" :nome="card.name" :imgUrl="card.card_images[0].image_url" :type="card.archetype" :select="select"/>
         </div>
       </div>
     </div>

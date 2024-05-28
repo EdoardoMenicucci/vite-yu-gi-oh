@@ -1,12 +1,13 @@
 <!-- COMPONENTE SINGOLO -->
 <script>
-import listaCarte from '../../data/store';
+// import listaCarte from '../../data/store';
 // SCRIPT
 export default {
   props:{
     nome : String,
     imgUrl : String,
     type : String,
+    select : String
   },
   // name: AppCard,
   components:{
@@ -28,7 +29,12 @@ export default {
 
 <template>
   <!-- TEMPLATE html-->
-  <div class="box-card gold mb-3">
+  <div v-if="select == 'All'" class="box-card gold mb-3">
+     <img :src="imgUrl" alt="">
+     <div>{{ nome }}</div>
+     <div class="smaller">{{ type }}</div>
+  </div>
+  <div v-else-if="select == type" class="box-card gold mb-3">
      <img :src="imgUrl" alt="">
      <div>{{ nome }}</div>
      <div class="smaller">{{ type }}</div>
