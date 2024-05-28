@@ -29,11 +29,13 @@ export default {
 
 <template>
   <!-- TEMPLATE html-->
+  <!-- SE IL SELECT E' IMPOSTATO SU ALL MOSTRO TUTTE LE CARTE -->
   <div v-if="select == 'All'" class="box-card gold mb-3">
      <img :src="imgUrl" alt="">
      <div>{{ nome }}</div>
      <div class="smaller">{{ type }}</div>
   </div>
+  <!-- ALTRIMENTI MOSTRO SOLO LE CARTE DI QUEL ARCHETIPO -->
   <div v-else-if="select == type" class="box-card gold mb-3">
      <img :src="imgUrl" alt="">
      <div>{{ nome }}</div>

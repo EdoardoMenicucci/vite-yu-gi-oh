@@ -21,28 +21,41 @@ export default {
 
   },
   computed: {
-        
+    // FUNZIONE CHE NUMERA LE CARTE SELEZIONATE PER TIPO
+      cardNumber(){
+        // SVUOTO L'ARRAY CONTENENTE IL TIPO SELEZIONATO
+        this.ListaContenuti.cardType = 0
+        for (let i = 0; i < ListaContenuti.carteApi.length; i++) {
+          const element = ListaContenuti.carteApi[i];
+          if (this.select == 'All') {
+            this.ListaContenuti.cardType = this.ListaContenuti.carteApi.length
+          }else if (element.archetype == this.select){
+            this.ListaContenuti.cardType += 1
+          }
+        }
+      } 
   },
   mounted() {
     // QUA BONUS LISTA GENERATA TRAMITE API 50 CARTE
-    axios.get('https://db.ygoprodeck.com/api/v7/cardinfo.php?num=50&offset=0').then((result) => {
+    axios.get('https://db.ygoprodeck.com/api/v7/cardinfo.php?num=80&offset=0').then((result) => {
       // this.listaApi = result.data.data,
       this.ListaContenuti.carteApi = result.data.data
+      // 
       for (let i = 0; i < this.ListaContenuti.carteApi.length; i++) {
         const element = this.ListaContenuti.carteApi[i];
-        // console.log(element.archetype);
+        // AGGIUNGO GLI ARCHETIPI ALL' SELECT MA NON FACCIO 'DOPPIONI'
         if (this.ListaContenuti.archetype.includes(element.archetype) || this.ListaContenuti.archetype.includes(null)){
-          // console.log(element.archetype,'gia contenuto');
-        } else if(element.archetype == NaN){
+          // NON MOSTRO QUELLI NON DEFINITI (PER EVITARE SPAZIO BIANCO NEL SELECT)
+        } else if(element.archetype == undefined){
           element.archetype = 'undefined'
-        }else {
+        }else { //IL RESTO LI PUSHO DENTRO AL ARRAY CHE CICLA SUL SELECT
           this.ListaContenuti.archetype.push(element.archetype)
           console.log(element.archetype);
         }
-        
+        // TENGO TRACCIA DEL NUMERO DI CARTE DEL TIPO SELEZIONATO (INIZIALMENTE TUTTE)
+        this.ListaContenuti.cardType = this.ListaContenuti.carteApi.length
       }
 })
-    // this.selectArche()
   },
 }
 </script>
@@ -52,7 +65,7 @@ export default {
     <div class="container">
       <div class="p-3">
         <!-- SELECT PER TIPO DI CARTA -->
-        <select name="role" id="role" v-model="select">
+        <select name="role" id="role" v-model="select" @change="cardNumber">
           <option v-for="elemento in ListaContenuti.archetype" :value="elemento">{{ elemento }}</option>
         </select>
       </div>
@@ -61,7 +74,8 @@ export default {
     <!-- Sezione principale -->
       <div class="main-section p-5">
         <div class="found p-3">
-          <div>Sono state trovate: {{ ListaContenuti.carteApi.length}} carte</div>
+          <!-- TENGO TRACCIA DELLE CARTE A SCHERMO PER TIPO -->
+          <div>Sono state trovate: {{ ListaContenuti.cardType}} carte</div>
         </div>
         <!-- QUA ANDRANNO TUTTE LE CARTE -->
         <!-- CONTENITORE CARD -->
