@@ -59,7 +59,7 @@ export default {
 // INSERISCO GLI ARCHETIPI TRAMITE API
     axios.get('https://db.ygoprodeck.com/api/v7/archetypes.php').then((r) => {
       this.ListaContenuti.archetypeApi = r.data
-      console.log(r.data[0].archetype_name);
+      // console.log(r.data[0].archetype_name);
     })
   },
 }
@@ -71,6 +71,7 @@ export default {
       <div class="p-3">
         <!-- SELECT PER TIPO DI CARTA -->
         <select name="role" id="role" v-model="select" @change="cardNumber">
+          <!-- INTERCAMBIABILI TRA archetypeApi   e    archetype FILTRATI NELLE CARTE PRESENTI -->
           <option v-for="elemento in ListaContenuti.archetypeApi" :value="elemento.archetype_name">{{ elemento.archetype_name }}</option>
         </select>
       </div>
